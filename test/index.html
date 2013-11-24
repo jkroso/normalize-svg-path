@@ -1,0 +1,134 @@
+
+<title>normalize svg path</title>
+
+<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+<style>
+	#visual {
+		font-family: verdana;
+	  font: 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+		color: #4c4c4c;
+		padding: 0 40px;
+	}
+
+	#visual ul {
+		margin: 0;
+		padding: 0;
+		padding-bottom: 30px;
+	}
+
+	#visual h2 {
+		border-bottom: 1px solid #ccc;
+		margin: 5px 0 0 0;
+		padding-bottom: 3px;
+	}
+
+	#visual li {
+		list-style-type: none;
+		display: inline-block;
+		margin: 15px;
+	}
+
+	#visual pre {
+		margin: 0;
+		padding: 0;
+		font-size: .75em;
+		font-weight: 300;
+	}
+
+	#visual svg {
+		width: 161px;
+		height: 161px;
+		padding: 10px;
+	}
+</style>
+
+<svg id="pattern" xmlns='http://www.w3.org/2000/svg' width='10' height='10'>
+  <path d='M0 0 0 10 M0 0 10 0' fill='#fff' stroke-width='1' stroke='#83abe6'/>
+  <rect x='1' y='1' width='9' height='9' fill='#f6fff4'/>
+</svg>
+
+<div id="mocha"></div>
+
+<div id="visual">
+	<h1>Visual tests</h1>
+	<p>The input paths are in red while computed paths are in green. If they don't line up then something is wrong</p>
+</div>
+
+<script>
+	var parse = require('parse-svg-path')
+	var cases = require('./cases')
+	var mocha = require('mocha')
+	var normalize = require('..')
+	var dom = require('dom')
+	var svg = require('svg')
+
+	var container = dom(visual)
+
+	Object.keys(cases).forEach(function(key){
+		container.append('<h2>').text(key)
+		var ul = container.append('<ul>')
+		cases[key].forEach(function(obj){
+			var computed = toString(normalize(parse(obj.from)))
+
+			var li = ul.append('<li>')
+			li.append('<pre>')
+				.text(obj.from)
+				.css('color', 'red')
+
+			li.append('<pre>')
+				.text(computed)
+				.css('color', 'green')
+
+			obj.to && li.append('<pre>')
+				.text(obj.to)
+				.css('color', 'blue')
+
+			var draw = svg(li.get(0))
+
+			draw.path(0,0)
+				.d(obj.from)
+				.stroke('red')
+				.width(2)
+				.style('opacity', 0.4)
+
+			draw.path(0,0)
+				.d(computed)
+				.stroke('green')
+				.width(2)
+				.style('opacity', 0.4)
+
+			obj.to && draw.path(0,0)
+				.d(obj.to)
+				.stroke('blue')
+				.width(2)
+				.style('opacity', 0.4)
+		})
+	})
+
+	function toString(path){
+		return path.reduce(function(str, seg){
+			return str + (seg[0] == 'M'
+				? 'M' + seg[1] + ',' + seg[2]
+				: 'C' + seg[1] + ',' + seg[2]
+				+ ',' + seg[3] + ',' + seg[4]
+				+ ',' + seg[5] + ',' + seg[6])
+		}, '')
+	}
+
+	var blob = new Blob([pattern.outerHTML], {type : 'image/svg+xml'})
+	var img = 'url(' + URL.createObjectURL(blob) + ')'
+
+	dom('#visual svg').css('backgroundImage', img)
+	document.body.removeChild(pattern)
+
+	mocha.setup({
+		reporter: 'html',
+		timeout: 200,
+		bail: true,
+		ui: 'bdd'
+	})
+
+	require('./normalize.test')
+
+	mocha.run()
+</script>

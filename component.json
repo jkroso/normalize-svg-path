@@ -1,0 +1,9 @@
+{
+  "name": "normalize-svg-path",
+  "repo": "jkroso/normalize-svg-path",
+  "description": "convert all segments in a path to curves",
+  "keywords": ["svg","path","normalize"],
+  "dependencies": {},
+  "scripts": ["index.js"],
+  "license": "MIT"
+}
