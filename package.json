@@ -5,11 +5,15 @@
   "keywords": ["svg","path","normalize"],
   "dependencies": {},
   "devDependencies": {
+    "domify": "component/domify",
+    "svg": "matthewmueller/svg",
     "serve": "jkroso/serve",
-    "dom": "component/dom",
     "parse-svg-path": "*",
+    "hydro-html": "*",
+    "hydro-dot": "*",
+    "hydro-bdd": "*",
     "equals": "*",
-    "mocha": "*",
+    "hydro": "*",
     "jsmd": "*"
   },
   "repository": "git://github.com/jkroso/normalize-svg-path.git",

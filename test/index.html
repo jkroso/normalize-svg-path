@@ -1,7 +1,7 @@
 
 <title>normalize svg path</title>
 
-<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+<link rel="stylesheet" href="../node_modules/hydro-html/index.css">
 <style>
 	#visual {
 		font-family: verdana;
@@ -47,7 +47,7 @@
   <rect x='1' y='1' width='9' height='9' fill='#f6fff4'/>
 </svg>
 
-<div id="mocha"></div>
+<div id="hydro"></div>
 
 <div id="visual">
 	<h1>Visual tests</h1>
@@ -57,33 +57,37 @@
 <script>
 	var parse = require('parse-svg-path')
 	var cases = require('./cases')
-	var mocha = require('mocha')
+	var domify = require('domify')
 	var normalize = require('..')
-	var dom = require('dom')
+  var Hydro = require('hydro')
 	var svg = require('svg')
 
-	var container = dom(visual)
+  var hydro = new Hydro
+
+  hydro.set({
+    timeout: 500,
+    formatter: require('hydro-html'),
+    plugins: [ require('hydro-bdd') ]
+  })
+
+  hydro.setup()
 
 	Object.keys(cases).forEach(function(key){
-		container.append('<h2>').text(key)
-		var ul = container.append('<ul>')
+		var ul = domify('<ul>')
+		visual.appendChild(domify('<h2>' + key + '</h2>'))
+		visual.appendChild(ul)
 		cases[key].forEach(function(obj){
 			var computed = toString(normalize(parse(obj.from)))
 
-			var li = ul.append('<li>')
-			li.append('<pre>')
-				.text(obj.from)
-				.css('color', 'red')
+			var li = domify('<li>'
+				+ '<pre style="color:red">' + obj.from + '</pre>'
+				+ '<pre stle="color:green"' + computed + '</pre></li>')
 
-			li.append('<pre>')
-				.text(computed)
-				.css('color', 'green')
+			obj.to && li.appendChild(domify('<pre style="color:blue">' + obj.to + '</pre>'))
 
-			obj.to && li.append('<pre>')
-				.text(obj.to)
-				.css('color', 'blue')
+			ul.appendChild(li)
 
-			var draw = svg(li.get(0))
+			var draw = svg(li)
 
 			draw.path(0,0)
 				.d(obj.from)
@@ -118,17 +122,10 @@
 	var blob = new Blob([pattern.outerHTML], {type : 'image/svg+xml'})
 	var img = 'url(' + URL.createObjectURL(blob) + ')'
 
-	dom('#visual svg').css('backgroundImage', img)
+	document.querySelector('#visual svg').style.backgroundImage = img
 	document.body.removeChild(pattern)
-
-	mocha.setup({
-		reporter: 'html',
-		timeout: 200,
-		bail: true,
-		ui: 'bdd'
-	})
 
 	require('./normalize.test')
 
-	mocha.run()
+  hydro.run()
 </script>
