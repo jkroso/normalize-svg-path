@@ -62,6 +62,10 @@
   var Hydro = require('hydro')
   var svg = require('svg')
 
+  var blob = new Blob([pattern.outerHTML], {type : 'image/svg+xml'})
+  var img = 'url(' + URL.createObjectURL(blob) + ')'
+  document.body.removeChild(pattern)
+
   var hydro = new Hydro
 
   hydro.set({
@@ -78,12 +82,11 @@
     visual.appendChild(ul)
     cases[key].forEach(function(obj){
       var computed = toString(normalize(parse(obj.from)))
-
       var li = domify('<li>'
-        + '<pre style="color:red">' + obj.from + '</pre>'
-        + '<pre stle="color:green"' + computed + '</pre></li>')
+        + '<pre style="color:red;">' + obj.from + '</pre>'
+        + '<pre style="color:green;">' + computed + '</pre></li>')
 
-      obj.to && li.appendChild(domify('<pre style="color:blue">' + obj.to + '</pre>'))
+      obj.to && li.appendChild(domify('<pre style="color:blue;">' + obj.to + '</pre>'))
 
       ul.appendChild(li)
 
@@ -106,6 +109,8 @@
         .stroke('blue')
         .width(2)
         .style('opacity', 0.4)
+
+      draw.el.style.backgroundImage = img
     })
   })
 
@@ -118,12 +123,6 @@
         + ',' + seg[5] + ',' + seg[6])
     }, '')
   }
-
-  var blob = new Blob([pattern.outerHTML], {type : 'image/svg+xml'})
-  var img = 'url(' + URL.createObjectURL(blob) + ')'
-
-  document.querySelector('#visual svg').style.backgroundImage = img
-  document.body.removeChild(pattern)
 
   require('./normalize.test')
 
