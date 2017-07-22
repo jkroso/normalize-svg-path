@@ -1,5 +1,5 @@
+# normalize-svg-path [![build](https://travis-ci.org/jkroso/is-svg-path.svg?branch=master)](https://travis-ci.org/jkroso/is-svg-path)
 
-# normalize-svg-path
 
   Convert all segments in a path to curves. Usefull if you intend to animate one shape to another. By defining all segments with curves instead of a mix of lines, arcs, and curves tweening becomes much simpler. It could also help you rewrite your SVG code according to the principles of [narcissistic design](//vimeo.com/77199361).
 
