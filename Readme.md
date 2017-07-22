@@ -3,18 +3,16 @@
 
   Convert all segments in a path to curves. Usefull if you intend to animate one shape to another. By defining all segments with curves instead of a mix of lines, arcs, and curves tweening becomes much simpler. It could also help you rewrite your SVG code according to the principles of [narcissistic design](//vimeo.com/77199361).
 
-## Installation
+## Usage
 
-With your favourite package manager:
-
-- [packin](//github.com/jkroso/packin): `packin add normalize-svg-path`
-- [component](//github.com/component/component#installing-packages): `component install jkroso/normalize-svg-path`
-- [npm](//npmjs.org/doc/cli/npm-install.html): `npm install normalize-svg-path`
-
-then in your app:
+[![npm install normalize-svg-path](https://nodei.co/npm/normalize-svg-path.png?mini=true)](https://npmjs.org/package/normalize-svg-path/)
 
 ```js
+var parse = require('parse-svg-path')
+var abs = require('abs-svg-path')
 var normalize = require('normalize-svg-path')
+
+var segments = normalize(abs(parse('M0 0L10 10A10 10 0 0 0 20 20Z')))
 ```
 
 ## API
