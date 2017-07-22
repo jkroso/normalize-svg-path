@@ -1,24 +1,21 @@
 {
   "name": "normalize-svg-path",
-  "version": "0.1.0",
-  "description": "convert all segments in a path to curves",
-  "keywords": ["svg","path","normalize"],
-  "dependencies": {},
+  "version": "1.0.0",
+  "description": "Convert all segments in a path to curves",
+  "keywords": [
+    "svg",
+    "path",
+    "normalize"
+  ],
+  "dependencies": {
+    "svg-arc-to-cubic-bezier": "^2.0.0"
+  },
   "devDependencies": {
-    "domify": "component/domify",
-    "svg": "matthewmueller/svg",
-    "serve": "jkroso/serve",
-    "parse-svg-path": "*",
-    "hydro-html": "*",
-    "hydro-dot": "*",
-    "hydro-bdd": "*",
-    "equals": "*",
-    "hydro": "*",
-    "jsmd": "*"
+    "parse-svg-path": "^0.1.2",
+    "tape": "^4.7.0"
   },
   "repository": "git://github.com/jkroso/normalize-svg-path.git",
   "bugs": "https://github.com/jkroso/normalize-svg-path/issues",
   "author": "Jake Rosoman",
-  "files": ["index.js"],
   "license": "MIT"
 }

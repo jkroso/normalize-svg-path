@@ -1,16 +1,8 @@
-
-var π = Math.PI
-var _120 = radians(120)
+'use strict'
 
 module.exports = normalize
 
-/**
- * describe `path` in terms of cubic bézier
- * curves and move commands
- *
- * @param {Array} path
- * @return {Array}
- */
+var arcToCurve = require('svg-arc-to-cubic-bezier').default
 
 function normalize(path){
   // init state
@@ -28,19 +20,34 @@ function normalize(path){
   for (var i = 0, len = path.length; i < len; i++) {
     var seg = path[i]
     var command = seg[0]
+
     switch (command) {
       case 'M':
         startX = seg[1]
         startY = seg[2]
         break
       case 'A':
-        seg = arc(x, y,seg[1],seg[2],radians(seg[3]),seg[4],seg[5],seg[6],seg[7])
-        // split multi part
-        seg.unshift('C')
-        if (seg.length > 7) {
-          result.push(seg.splice(0, 7))
-          seg.unshift('C')
+        var curves = arcToCurve({
+          px: x,
+          py: y,
+          cx: seg[6],
+          cy:  seg[7],
+          rx: seg[1],
+          ry: seg[2],
+          xAxisRotation: seg[3],
+          largeArcFlag: seg[4],
+          sweepFlag: seg[5]
+        })
+
+        // null-curves
+        if (!curves.length) continue
+
+        for (var j = 0, c; j < curves.length; j++) {
+          c = curves[j]
+          seg = ['C', c.x1, c.y1, c.x2, c.y2, c.x, c.y]
+          if (j < curves.length - 1) result.push(seg)
         }
+
         break
       case 'S':
         // default control point
@@ -112,89 +119,4 @@ function quadratic(x1, y1, cx, cy, x2, y2){
     x2,
     y2
   ]
-}
-
-// This function is ripped from
-// github.com/DmitryBaranovskiy/raphael/blob/4d97d4/raphael.js#L2216-L2304
-// which references w3.org/TR/SVG11/implnote.html#ArcImplementationNotes
-// TODO: make it human readable
-
-function arc(x1, y1, rx, ry, angle, large_arc_flag, sweep_flag, x2, y2, recursive) {
-  if (!recursive) {
-    var xy = rotate(x1, y1, -angle)
-    x1 = xy.x
-    y1 = xy.y
-    xy = rotate(x2, y2, -angle)
-    x2 = xy.x
-    y2 = xy.y
-    var x = (x1 - x2) / 2
-    var y = (y1 - y2) / 2
-    var h = (x * x) / (rx * rx) + (y * y) / (ry * ry)
-    if (h > 1) {
-      h = Math.sqrt(h)
-      rx = h * rx
-      ry = h * ry
-    }
-    var rx2 = rx * rx
-    var ry2 = ry * ry
-    var k = (large_arc_flag == sweep_flag ? -1 : 1)
-      * Math.sqrt(Math.abs((rx2 * ry2 - rx2 * y * y - ry2 * x * x) / (rx2 * y * y + ry2 * x * x)))
-    if (k == Infinity) k = 1 // neutralize
-    var cx = k * rx * y / ry + (x1 + x2) / 2
-    var cy = k * -ry * x / rx + (y1 + y2) / 2
-    var f1 = Math.asin(((y1 - cy) / ry).toFixed(9))
-    var f2 = Math.asin(((y2 - cy) / ry).toFixed(9))
-
-    f1 = x1 < cx ? π - f1 : f1
-    f2 = x2 < cx ? π - f2 : f2
-    if (f1 < 0) f1 = π * 2 + f1
-    if (f2 < 0) f2 = π * 2 + f2
-    if (sweep_flag && f1 > f2) f1 = f1 - π * 2
-    if (!sweep_flag && f2 > f1) f2 = f2 - π * 2
-  } else {
-    f1 = recursive[0]
-    f2 = recursive[1]
-    cx = recursive[2]
-    cy = recursive[3]
-  }
-  // greater than 120 degrees requires multiple segments
-  if (Math.abs(f2 - f1) > _120) {
-    var f2old = f2
-    var x2old = x2
-    var y2old = y2
-    f2 = f1 + _120 * (sweep_flag && f2 > f1 ? 1 : -1)
-    x2 = cx + rx * Math.cos(f2)
-    y2 = cy + ry * Math.sin(f2)
-    var res = arc(x2, y2, rx, ry, angle, 0, sweep_flag, x2old, y2old, [f2, f2old, cx, cy])
-  }
-  var t = Math.tan((f2 - f1) / 4)
-  var hx = 4 / 3 * rx * t
-  var hy = 4 / 3 * ry * t
-  var curve = [
-    2 * x1 - (x1 + hx * Math.sin(f1)),
-    2 * y1 - (y1 - hy * Math.cos(f1)),
-    x2 + hx * Math.sin(f2),
-    y2 - hy * Math.cos(f2),
-    x2,
-    y2
-  ]
-  if (recursive) return curve
-  if (res) curve = curve.concat(res)
-  for (var i = 0; i < curve.length;) {
-    var rot = rotate(curve[i], curve[i+1], angle)
-    curve[i++] = rot.x
-    curve[i++] = rot.y
-  }
-  return curve
-}
-
-function rotate(x, y, rad){
-  return {
-    x: x * Math.cos(rad) - y * Math.sin(rad),
-    y: x * Math.sin(rad) + y * Math.cos(rad)
-  }
-}
-
-function radians(degress){
-  return degress * (π / 180)
 }
