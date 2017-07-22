@@ -8,8 +8,11 @@
     "normalize"
   ],
   "dependencies": {
+    "svg-arc-to-cubic-bezier": "^2.0.0"
   },
   "devDependencies": {
+    "is-svg-path": "^1.0.0",
+    "parse-svg-path": "^0.1.2",
     "tape": "^4.7.0"
   },
   "repository": "git://github.com/jkroso/normalize-svg-path.git",

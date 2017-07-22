@@ -2,7 +2,7 @@
 
 module.exports = normalize
 
-var a2c = require('svg-arc-to-cubic-bezier')
+var arcToCurve = require('svg-arc-to-cubic-bezier').default
 
 function normalize(path){
   // init state
@@ -27,7 +27,7 @@ function normalize(path){
         startY = seg[2]
         break
       case 'A':
-        var curves = a2c({
+        var curves = arcToCurve({
           px: x,
           py: y,
           cx: seg[6],
@@ -38,6 +38,9 @@ function normalize(path){
           largeArcFlag: seg[4],
           sweepFlag: seg[5]
         })
+
+        // null-curves
+        if (!curves.length) continue
 
         for (var j = 0, c; j < curves.length; j++) {
           c = curves[j]
@@ -116,4 +119,8 @@ function quadratic(x1, y1, cx, cy, x2, y2){
     x2,
     y2
   ]
+}
+
+function round(v, precision) {
+  return Math.round(v / precision) * precision
 }
