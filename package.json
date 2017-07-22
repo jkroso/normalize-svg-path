@@ -8,7 +8,7 @@
     "normalize"
   ],
   "dependencies": {
-    "svg-arc-to-cubic-bezier": "^2.0.0"
+    "svg-arc-to-cubic-bezier": "^3.0.0"
   },
   "devDependencies": {
     "parse-svg-path": "^0.1.2",

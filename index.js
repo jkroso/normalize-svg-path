@@ -2,7 +2,7 @@
 
 module.exports = normalize
 
-var arcToCurve = require('svg-arc-to-cubic-bezier').default
+var arcToCurve = require('svg-arc-to-cubic-bezier')
 
 function normalize(path){
   // init state
