@@ -120,7 +120,3 @@ function quadratic(x1, y1, cx, cy, x2, y2){
     y2
   ]
 }
-
-function round(v, precision) {
-  return Math.round(v / precision) * precision
-}

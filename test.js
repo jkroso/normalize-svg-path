@@ -2,8 +2,7 @@
 
 let t = require('tape')
 let normalize = require('./')
-var parse = require('parse-svg-path')
-var isPath = require('is-svg-path')
+let parse = require('parse-svg-path')
 
 t('line-to', t => {
   t.deepEqual(
