@@ -1,6 +1,6 @@
 {
   "name": "normalize-svg-path",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert all segments in a path to curves",
   "keywords": [
     "svg",
