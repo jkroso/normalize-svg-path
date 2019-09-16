@@ -4,6 +4,7 @@ let t = require('tape')
 let normalize = require('./')
 let parse = require('parse-svg-path')
 
+
 t('line-to', t => {
   t.deepEqual(
     normalize(parse('L100 100')),
@@ -71,26 +72,26 @@ t('close-path', t => {
 
 t('arc-to', t => {
   t.deepEqual(
-    normalize(parse('M10 80 A150 150 0 0 0 150 80')),
-    parse('M 10 80C 53.80473794537901 103.1133445143787 106.19526205462094 103.1133445143787 149.99999999999997 80.00000000000003')
+    r(normalize(parse('M10 80 A150 150 0 0 0 150 80'))),
+    r(parse('M 10 80C 53.80473794537901 103.1133445143787 106.19526205462094 103.1133445143787 149.99999999999997 80.00000000000003'))
   )
 
   // half circle clockwise
   t.deepEqual(
-    normalize(parse('M10 80 A50 50 0 0 1 150 80')),
-    parse('M 10 80C 10 41.340067511844474 41.34006751184445 10.000000000000014 79.99999999999999 10C 118.65993248815552 10 150 41.34006751184445 150 79.99999999999999')
+    r(normalize(parse('M10 80 A50 50 0 0 1 150 80'))),
+    r(parse('M 10 80C 10 41.340067511844474 41.34006751184445 10.000000000000014 79.99999999999999 10C 118.65993248815552 10 150 41.34006751184445 150 79.99999999999999'))
   )
 
   // half circle anticlockwise
   t.deepEqual(
-    normalize(parse('M10 80 A50 50 0 1 0 150 80')),
-    parse('M 10 80C 10.000000000000014 118.65993248815553 41.340067511844474 150 80 150C 118.65993248815553 150 150 118.65993248815553 150 80')
+    r(normalize(parse('M10 80 A50 50 0 1 0 150 80'))),
+    r(parse('M 10 80C 10.000000000000014 118.65993248815553 41.340067511844474 150 80 150C 118.65993248815553 150 150 118.65993248815553 150 80'))
   )
 
   // circle
   t.deepEqual(
-    normalize(parse('M10 80 A50 50 0 0 1 150 80 A50 50 0 0 1 10 80')),
-    parse('M 10 80C 10 41.340067511844474 41.34006751184445 10.000000000000014 79.99999999999999 10C 118.65993248815552 10 150 41.34006751184445 150 79.99999999999999C 150 118.65993248815553 118.65993248815553 150 80 150C 41.340067511844474 150 10.000000000000014 118.65993248815553 10 80.00000000000001')
+    r(normalize(parse('M10 80 A50 50 0 0 1 150 80 A50 50 0 0 1 10 80'))),
+    r(parse('M 10 80C 10 41.340067511844474 41.34006751184445 10.000000000000014 79.99999999999999 10C 118.65993248815552 10 150 41.34006751184445 150 79.99999999999999C 150 118.65993248815553 118.65993248815553 150 80 150C 41.340067511844474 150 10.000000000000014 118.65993248815553 10 80.00000000000001'))
   )
 
   t.deepEqual(
@@ -107,15 +108,17 @@ t('arc-to', t => {
   t.end()
 })
 
+function r(arr) { return arr.map(function (arr) { return [arr[0]].concat(arr.slice(1).map(round)) }) }
+function round(v) { return Math.round(v) }
 
 //show parsed curve in the doc
-function show (src) {
+function show(src) {
   let path = src.map(seg => seg.join(' ')).join('')
 
   let el = document.body.appendChild(document.createElement('div'))
   let svgNS = 'http://www.w3.org/2000/svg'
 
-  el.innerHTML = `<svg id="mySVG" width="400" height="400" xmlns="${ svgNS }" xmlns:xlink="http://www.w3.org/1999/xlink"/>`
+  el.innerHTML = `<svg id="mySVG" width="400" height="400" xmlns="${svgNS}" xmlns:xlink="http://www.w3.org/1999/xlink"/>`
 
   let svg = el.firstChild
 
