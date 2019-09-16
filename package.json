@@ -14,7 +14,9 @@
     "parse-svg-path": "^0.1.2",
     "tape": "^4.7.0"
   },
-  "scripts": { "test": "node test.js" },
+  "scripts": {
+    "test": "node test.js"
+  },
   "repository": "git://github.com/jkroso/normalize-svg-path.git",
   "bugs": "https://github.com/jkroso/normalize-svg-path/issues",
   "author": "Jake Rosoman",
