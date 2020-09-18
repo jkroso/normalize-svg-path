@@ -8,11 +8,11 @@
 [![npm install normalize-svg-path](https://nodei.co/npm/normalize-svg-path.png?mini=true)](https://npmjs.org/package/normalize-svg-path/)
 
 ```js
-var parse = require('parse-svg-path')
-var abs = require('abs-svg-path')
-var normalize = require('normalize-svg-path')
+import parse from 'parse-svg-path'
+import abs from 'abs-svg-path'
+import normalize from 'normalize-svg-path'
 
-var segments = normalize(abs(parse('M0 0L10 10A10 10 0 0 0 20 20Z')))
+const segments = normalize(abs(parse('M0 0L10 10A10 10 0 0 0 20 20Z')))
 ```
 
 ## API
