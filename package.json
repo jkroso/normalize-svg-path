@@ -7,6 +7,12 @@
     "path",
     "normalize"
   ],
+  "module": "./index.mjs",
+  "main": "./index.js",
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs"
+  },
   "dependencies": {
     "svg-arc-to-cubic-bezier": "^3.0.0"
   },
@@ -15,7 +21,7 @@
     "tape": "^4.7.0"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.mjs"
   },
   "repository": "git://github.com/jkroso/normalize-svg-path.git",
   "bugs": "https://github.com/jkroso/normalize-svg-path/issues",

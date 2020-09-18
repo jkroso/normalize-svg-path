@@ -1,8 +1,6 @@
-'use strict'
-
-let t = require('tape')
-let normalize = require('./')
-let parse = require('parse-svg-path')
+import t from 'tape'
+import normalize from './index.mjs'
+import parse from 'parse-svg-path'
 
 
 t('line-to', t => {
